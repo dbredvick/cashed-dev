@@ -1,6 +1,8 @@
+'use client'
 import { Fragment, useId, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+
 import clsx from 'clsx'
 
 import { AudioPlayer } from '@/components/player/AudioPlayer'
@@ -37,9 +39,9 @@ function Waveform(props) {
           <stop offset="100%" stopColor="black" />
         </linearGradient>
         <linearGradient id={`${id}-gradient`}>
-          <stop offset="0%" stopColor="#4989E8" />
-          <stop offset="50%" stopColor="#6159DA" />
-          <stop offset="100%" stopColor="#FF54AD" />
+          <stop offset="0%" stopColor="#2DD4BF" />
+          <stop offset="50%" stopColor="#34D399" />
+          <stop offset="100%" stopColor="#4ADE80" />
         </linearGradient>
         <mask id={`${id}-mask`}>
           <rect width="100%" height="100%" fill={`url(#${id}-pattern)`} />
@@ -172,8 +174,9 @@ function AboutSection(props) {
   )
 }
 
-export function Layout({ children }) {
-  let hosts = ['Eric Gordon', 'Wes Mantooth']
+export function Layout({ children, drewCommits, hideCommits, jacobCommits, ...props }) {
+  console.log(drewCommits, hideCommits, jacobCommits)
+  let hosts = ['Drew Bredvick', 'Hide Shidara', 'Jacob Foshee']
 
   return (
     <>
@@ -210,11 +213,10 @@ export function Layout({ children }) {
           </Link>
           <div className="mt-10 text-center lg:mt-12 lg:text-left">
             <p className="text-xl font-bold text-slate-900">
-              <Link href="/">Their Side</Link>
+              <Link href="/">Cashed.dev</Link>
             </p>
             <p className="mt-3 text-lg font-medium leading-8 text-slate-700">
-              Conversations with the most tragically misunderstood people of our
-              time.
+              Weekly conversations about the business of starting a software company.
             </p>
           </div>
           <AboutSection className="mt-12 hidden lg:block" />

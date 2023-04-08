@@ -53,6 +53,8 @@ async function checkUserCommitToday(username, token) {
     const repos = await fetchAllRepos(username, headers, 1, pacificMidnightISOString);
     console.log(repos.map(repo => repo.html_url))
 
+    const todaysCommits = [];
+
     // // Check each repo for commits made today
     for (const repo of repos) {
         const commits = await fetchJson(
@@ -65,13 +67,13 @@ async function checkUserCommitToday(username, token) {
         );
 
         // If there's at least one commit made today, return true
-        if (commits.length > 0) {
-            return true;
+        if (!(typeof commits === 'object' && commits.message === 'Git Repository is empty.') && commits.length > 0) {
+            todaysCommits.push(...commits);
         }
     }
 
     // If no commits were found today, return false
-    return repos.length > 0;
+    return todaysCommits.length > 0;
 }
 
 export default async function handler(req, res) {
@@ -79,8 +81,6 @@ export default async function handler(req, res) {
 
     // todayISO but just the date
     const todayDate = today.split('T')[0];
-
-
 
     const hideCommits = await kv.get("hide_commits") || {};
     const drewCommits = await kv.get("drew_commits") || {};
@@ -106,16 +106,9 @@ export default async function handler(req, res) {
         console.log('hide already committed today, no need to check')
     }
 
-
-    // check if drew committed
-
-
-
-
-    // check if jacob committed
-
     await kv.set("drew_commits", drewCommits);
     await kv.set("hide_commits", hideCommits);
+    await kv.set("jacob_commits", jacobCommits);
 
     return new Response(JSON.stringify({ hideCommits, drewCommits, jacobCommits }));
 
