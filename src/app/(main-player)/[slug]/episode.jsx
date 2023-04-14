@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { useAudioPlayer } from '@/components/AudioProvider'
 import { PlayButton } from '@/components/player/PlayButton'
+import slugify from '@/lib/slugify'
 
 export default function Episode({ episode }) {
 
@@ -14,7 +15,7 @@ export default function Episode({ episode }) {
                 src: episode.audio.src,
                 type: episode.audio.type,
             },
-            link: `/${episode.id}`,
+            link: `/${slugify(episode.title)} `,
         }),
         [episode]
     )

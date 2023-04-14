@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import slugify from '@/lib/slugify'
 
 import { useAudioPlayer } from '@/components/AudioProvider'
 import { Container } from '@/components/Container'
@@ -52,14 +53,14 @@ function EpisodeEntry({ episode }) {
                         id={`episode-${episode.id}-title`}
                         className="mt-2 text-lg font-bold text-slate-900"
                     >
-                        <Link href={`/${episode.id}`}>{episode.title}</Link>
+                        <Link href={`/${slugify(episode.title)}`}>{episode.title}</Link>
                     </h2>
                     <FormattedDate
                         date={date}
                         className="order-first font-mono text-sm leading-7 text-slate-500"
                     />
-                    <p className="mt-1 text-base leading-7 text-slate-700">
-                        {episode.description}
+                    <p className="mt-1 text-base leading-7 text-slate-700" dangerouslySetInnerHTML={{ __html: episode.description }}>
+
                     </p>
                     <div className="mt-4 flex items-center gap-4">
                         <button

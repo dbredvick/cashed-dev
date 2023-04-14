@@ -5,12 +5,11 @@ import { parse } from 'rss-to-json'
 
 export default async function App({ Component, pageProps }) {
 
-    let feed = await parse('https://their-side-feed.vercel.app/api/feed')
+    let feed = await parse('https://feeds.transistor.fm/cashed-dev')
 
     const episodes = feed.items.map(
-        ({ id, title, description, enclosures, published }) => ({
-            id,
-            title: `${id}: ${title}`,
+        ({ title, description, enclosures, published }) => ({
+            title: `${title}`,
             published,
             description,
             audio: enclosures.map((enclosure) => ({

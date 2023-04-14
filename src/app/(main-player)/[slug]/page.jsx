@@ -7,13 +7,14 @@ import { FormattedDate } from '@/components/FormattedDate'
 
 import Episode from './episode'
 
+import slugify from '@/lib/slugify'
+
 export default async function Main({ params }) {
-    let feed = await parse('https://their-side-feed.vercel.app/api/feed')
+    let feed = await parse('https://feeds.transistor.fm/cashed-dev')
     console.log(feed)
     let episode = feed.items
-        .map(({ id, title, description, content, enclosures, published }) => ({
-            id: id.toString(),
-            title: `${id}: ${title}`,
+        .map(({ title, description, content, enclosures, published }) => ({
+            title: `${title}`,
             description,
             content,
             published,
@@ -22,7 +23,7 @@ export default async function Main({ params }) {
                 type: enclosure.type,
             }))[0],
         }))
-        .find(({ id }) => id === params.slug)
+        .find(({ title }) => slugify(title) === params.slug)
 
     if (!episode) {
         return notFound()
@@ -51,9 +52,7 @@ export default async function Main({ params }) {
                                 />
                             </div>
                         </div>
-                        <p className="ml-24 mt-3 text-lg font-medium leading-8 text-slate-700">
-                            {episode.description}
-                        </p>
+
                     </header>
                     <hr className="my-12 border-gray-200" />
                     <div
