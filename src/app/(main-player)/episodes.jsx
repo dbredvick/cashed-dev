@@ -85,7 +85,7 @@ function EpisodeEntry({ episode }) {
                             /
                         </span>
                         <Link
-                            href={`/${episode.id}`}
+                            href={`/${slugify(episode.title)}`}
                             className="flex items-center text-sm font-bold leading-6 text-green-500 hover:text-green-700 active:text-green-900"
                             aria-label={`Show notes for episode ${episode.title}`}
                         >
