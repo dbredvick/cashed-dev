@@ -155,12 +155,7 @@ function AboutSection(props) {
           !isExpanded && 'lg:line-clamp-4'
         )}
       >
-        In this show, Eric and Wes dig deep to get to the facts with guests who
-        have been labeled villains by a society quick to judge, without actually
-        getting the full story. Tune in every Thursday to get to the truth with
-        another misunderstood outcast as they share the missing context in their
-        tragic tale.
-      </p>
+        In this show, Jacob, Hide, and Drew provide a ride-along on their bootstrapping journeys. Think of it like the TV show Cops for SaaS, except waay different.</p>
       {!isExpanded && (
         <button
           type="button"
