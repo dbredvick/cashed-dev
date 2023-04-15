@@ -117,7 +117,7 @@ export default async function og(req) {
             }}
 
         >
-            <img tw="w-[640px]" src={"https://cashed.dev/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fposter.15846383.png&w=640&q=75"} />
+            <img tw="w-[640px]" src={"https://cashed.dev/poster.png"} />
 
             <div tw="flex w-full flex-1 flex-wrap">
                 <Waveform tw="absolute left-0 top-0 h-40 w-full" />
