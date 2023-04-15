@@ -16,7 +16,7 @@ function randomBetween(min, max, seed = 1) {
   }
 }
 
-function Waveform(props) {
+export function Waveform(props) {
   let id = useId()
   let bars = {
     total: 100,
