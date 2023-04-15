@@ -6,6 +6,8 @@ export const size = { width: 1200, height: 600 };
 export const alt = 'About this episode of Cashed.dev';
 export const contentType = 'image/png';
 
+export const runtime = 'edge'
+
 function randomBetween(min, max, seed = 1) {
     return () => {
         let rand = Math.sin(seed++) * 10000
