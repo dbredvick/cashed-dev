@@ -172,7 +172,7 @@ export default async function og(req) {
     return new ImageResponse(
         <
             div
-            tw="justify-between"
+            tw="justify-between bg-white"
             style
             =
             {{
