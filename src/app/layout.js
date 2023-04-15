@@ -1,6 +1,9 @@
 import { AudioProvider } from '@/components/AudioProvider'
 import { Layout } from '@/components/Layout'
 
+import { Analytics } from '@vercel/analytics/react';
+
+
 import kv from "@vercel/kv";
 
 
@@ -33,7 +36,7 @@ export default async function RootLayout({ children }) {
         />
       </head>
 
-      <body><AudioProvider><Layout drewCommits={drewCommits} hideCommits={hideCommits} jacobCommits={jacobCommits}>{children}</Layout></AudioProvider></body>
+      <body><AudioProvider><Layout drewCommits={drewCommits} hideCommits={hideCommits} jacobCommits={jacobCommits}>{children}</Layout></AudioProvider><Analytics /></body>
     </html>
   )
 }
