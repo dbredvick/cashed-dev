@@ -197,10 +197,10 @@ export default async function og(req) {
 
             <div tw="flex w-full flex-1 flex-wrap">
                 <Waveform tw="absolute left-0 top-0 h-40 w-full" />
-                <h1 tw="ml-4 mt-48 text-4xl font-bold tracking-tight ">
+                <h1 tw="ml-4 mt-48 text-5xl font-bold tracking-tight ">
                     {title}
                 </h1>
-                <h3 tw="mt-4 ml-4">{description}</h3>
+                <h3 tw="mt-4 ml-4 text-lg">{description}</h3>
                 <h1 tw="ml-4 mt-12 text-6xl font-bold tracking-tight">
                     {episodeTitle}
                 </h1>
