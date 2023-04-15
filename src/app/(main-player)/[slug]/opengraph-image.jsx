@@ -1,11 +1,91 @@
 import slugify from '@/lib/slugify';
 import { ImageResponse } from 'next/server';
-import Parser from 'rss-parser';
+const { XMLParser } = require("fast-xml-parser");
 
 export const size = { width: 1200, height: 600 };
 export const alt = 'About this episode of Cashed.dev';
 export const contentType = 'image/png';
 
+
+export const runtime = 'edge'
+
+// function parseXML(xmlString) {
+//     const tagPattern = /<([^>]+)>([\s\S]*?)<\/\1>/g;
+//     const tagContents = /<([^>]+)>([\s\S]*?)<\/\1>/;
+//     const xmlnsPattern = /xmlns:\w+="[^"]+"/g;
+//     const cdataPattern = /<!\[CDATA\[(.*?)]]>/g;
+
+//     const parseNode = (str) => {
+//         const matches = str.match(tagContents);
+//         if (matches) {
+//             const tagName = matches[1].split(':').pop();
+//             const content = matches[2];
+//             return { tagName, content };
+//         }
+//         return null;
+//     };
+
+//     const cleanedXmlString = xmlString
+//         .replace(xmlnsPattern, '')
+//         .replace(cdataPattern, '$1');
+
+//     const xmlNodes = cleanedXmlString
+//         .match(tagPattern)
+//         .map(parseNode)
+//         .filter((node) => node);
+
+//     const result = {};
+//     xmlNodes.forEach((node) => {
+//         if (!result[node.tagName]) {
+//             result[node.tagName] = [];
+//         }
+//         result[node.tagName].push(node.content);
+//     });
+
+//     return result;
+// }
+
+async function parseXML(data) {
+    const parser = new XMLParser();
+    const options = {
+        attributeNamePrefix: '',
+        attrNodeName: 'attributes',
+        ignoreAttributes: false,
+    };
+
+    return parser.parse(data, options);
+}
+
+
+async function parseRSS(url) {
+    try {
+        const response = await fetch(url);
+
+        if (response.ok) {
+            const data = await response.text();
+            const xmlDoc = await parseXML(data);
+            const items = xmlDoc.rss.channel.items ? xmlDoc.rss.channel.items : [xmlDoc.rss.channel.item];
+            console.log('items', items)
+            const result = [];
+
+            for (let i = 0; i < items.length; i++) {
+                const itemXML = items[i];
+                const title = itemXML.title;
+                const link = itemXML.link;
+                const description = itemXML.description;
+                const pubDate = itemXML.pubDate ? itemXML.pubDate : null;
+
+                result.push({ title, link, description, pubDate });
+            }
+
+            return result;
+        } else {
+            throw new Error('Network error');
+        }
+    } catch (error) {
+        console.error('Error fetching RSS feed:', error);
+    }
+}
 
 function randomBetween(min, max, seed = 1) {
     return () => {
@@ -76,22 +156,18 @@ export function Waveform(props) {
 
 
 export default async function og(req) {
-    const parser = new Parser();
-    const feed = await parser.parseURL('https://feeds.transistor.fm/cashed-dev')
+    const data = await parseRSS('https://feeds.transistor.fm/cashed-dev');
+
+    const feed = data;
 
     console.log(feed);
 
-    const title = feed.title;
-    const description = feed.description;
-    const image = feed.image.url;
+    const title = "Cashed.dev";
+    const description = "Weekly conversations about the business of starting a software company."
 
-    const currentEpisode = feed.items.find((item) => slugify(item.title) === slugify(req.params.slug));
-
-    console.log('current', currentEpisode);
+    const currentEpisode = feed.find((item) => slugify(item.title) === slugify(req.params.slug));
 
     const episodeTitle = currentEpisode.title;
-    const episodeDescription = currentEpisode.contentSnippet;
-
 
     return new ImageResponse(
         <
