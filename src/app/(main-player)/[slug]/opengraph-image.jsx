@@ -200,7 +200,7 @@ export default async function og(req) {
                 <h1 tw="ml-4 mt-48 text-5xl font-bold tracking-tight ">
                     {title}
                 </h1>
-                <h3 tw="mt-4 ml-4 text-lg">{description}</h3>
+                <h3 tw="mt-4 ml-4 text-lg mr-4">{description}</h3>
                 <h1 tw="ml-4 mt-12 text-6xl font-bold tracking-tight">
                     {episodeTitle}
                 </h1>
