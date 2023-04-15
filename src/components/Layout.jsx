@@ -229,14 +229,14 @@ export function Layout({ children, drewCommits, hideCommits, jacobCommits, ...pr
               className="mt-4 flex justify-center gap-10 text-base font-medium leading-7 text-slate-700 sm:gap-8 lg:flex-col lg:gap-4"
             >
               {[
-                ['Spotify', SpotifyIcon],
+                ['Spotify', SpotifyIcon, 'https://open.spotify.com/show/5631mMd69Zm2VxRsNcjtzr'],
                 ['Apple Podcast', ApplePodcastIcon],
                 ['Overcast', OvercastIcon],
-                ['RSS Feed', RSSIcon],
-              ].map(([label, Icon]) => (
+                ['RSS Feed', RSSIcon, 'https://feeds.transistor.fm/cashed-dev'],
+              ].map(([label, Icon, url]) => (
                 <li key={label} className="flex">
                   <Link
-                    href="/"
+                    href={url || '#'}
                     className="group flex items-center"
                     aria-label={label}
                   >
