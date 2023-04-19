@@ -1,91 +1,11 @@
 import slugify from '@/lib/slugify';
 import { ImageResponse } from 'next/server';
-const { XMLParser } = require("fast-xml-parser");
+import { parse } from 'rss-to-json'
+
 
 export const size = { width: 1200, height: 600 };
 export const alt = 'About this episode of Cashed.dev';
 export const contentType = 'image/png';
-
-
-export const runtime = 'edge'
-
-// function parseXML(xmlString) {
-//     const tagPattern = /<([^>]+)>([\s\S]*?)<\/\1>/g;
-//     const tagContents = /<([^>]+)>([\s\S]*?)<\/\1>/;
-//     const xmlnsPattern = /xmlns:\w+="[^"]+"/g;
-//     const cdataPattern = /<!\[CDATA\[(.*?)]]>/g;
-
-//     const parseNode = (str) => {
-//         const matches = str.match(tagContents);
-//         if (matches) {
-//             const tagName = matches[1].split(':').pop();
-//             const content = matches[2];
-//             return { tagName, content };
-//         }
-//         return null;
-//     };
-
-//     const cleanedXmlString = xmlString
-//         .replace(xmlnsPattern, '')
-//         .replace(cdataPattern, '$1');
-
-//     const xmlNodes = cleanedXmlString
-//         .match(tagPattern)
-//         .map(parseNode)
-//         .filter((node) => node);
-
-//     const result = {};
-//     xmlNodes.forEach((node) => {
-//         if (!result[node.tagName]) {
-//             result[node.tagName] = [];
-//         }
-//         result[node.tagName].push(node.content);
-//     });
-
-//     return result;
-// }
-
-async function parseXML(data) {
-    const parser = new XMLParser();
-    const options = {
-        attributeNamePrefix: '',
-        attrNodeName: 'attributes',
-        ignoreAttributes: false,
-    };
-
-    return parser.parse(data, options);
-}
-
-
-async function parseRSS(url) {
-    try {
-        const response = await fetch(url);
-
-        if (response.ok) {
-            const data = await response.text();
-            const xmlDoc = await parseXML(data);
-            const items = xmlDoc.rss.channel.items ? xmlDoc.rss.channel.items : [xmlDoc.rss.channel.item];
-            console.log('items', items)
-            const result = [];
-
-            for (let i = 0; i < items.length; i++) {
-                const itemXML = items[i];
-                const title = itemXML.title;
-                const link = itemXML.link;
-                const description = itemXML.description;
-                const pubDate = itemXML.pubDate ? itemXML.pubDate : null;
-
-                result.push({ title, link, description, pubDate });
-            }
-
-            return result;
-        } else {
-            throw new Error('Network error');
-        }
-    } catch (error) {
-        console.error('Error fetching RSS feed:', error);
-    }
-}
 
 function randomBetween(min, max, seed = 1) {
     return () => {
@@ -109,7 +29,6 @@ export function Waveform(props) {
         { length: bars.total },
         randomBetween(bars.minHeight, bars.maxHeight)
     )
-
 
     return (
         <svg aria-hidden="true" {...props}>
@@ -155,46 +74,35 @@ export function Waveform(props) {
 }
 
 export default async function og(req) {
-    const data = await parseRSS('https://feeds.transistor.fm/cashed-dev');
+    const feed = await parse('https://feeds.transistor.fm/cashed-dev');
 
-    const feed = data;
-
-    console.log(feed);
+    const episodes = feed.items.map(
+        ({ title, description, enclosures, published }) => ({
+            title: `${title}`,
+            published,
+            description,
+            audio: enclosures.map((enclosure) => ({
+                src: enclosure.url,
+                type: enclosure.type,
+            }))[0],
+        })
+    )
 
     const title = "Cashed.dev";
     const description = "Weekly conversations about the business of starting a software company."
-
-    const currentEpisode = feed.find((item) => slugify(item.title) === slugify(req.params.slug));
-
+    const currentEpisode = episodes.find((item) => slugify(item.title) === slugify(req.params.slug));
     const episodeTitle = currentEpisode.title;
 
     return new ImageResponse(
-        <
-            div
+        <div
             tw="justify-between bg-white"
-            style
-            =
-            {{
-                height
-                    :
-
-                    '100%'
-                ,
-                width
-                    :
-
-                    '100%'
-                ,
-                display
-                    :
-
-                    'flex'
-                ,
+            style={{
+                height: '100%',
+                width: '100%',
+                display: 'flex',
             }}
-
         >
             <img tw="w-[640px]" src={"https://cashed.dev/poster.png"} />
-
             <div tw="flex w-full flex-1 flex-wrap">
                 <Waveform tw="absolute left-0 top-0 h-40 w-full" />
                 <h1 tw="ml-4 mt-48 text-5xl font-bold tracking-tight ">
@@ -205,7 +113,6 @@ export default async function og(req) {
                     {episodeTitle}
                 </h1>
             </div>
-
         </div >
     );
 }

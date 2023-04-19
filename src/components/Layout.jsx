@@ -230,8 +230,7 @@ export function Layout({ children, drewCommits, hideCommits, jacobCommits, ...pr
             >
               {[
                 ['Spotify', SpotifyIcon, 'https://open.spotify.com/show/5631mMd69Zm2VxRsNcjtzr'],
-                ['Apple Podcast', ApplePodcastIcon],
-                ['Overcast', OvercastIcon],
+                ['Apple Podcast', ApplePodcastIcon, "https://podcasts.apple.com/us/podcast/cashed-dev/id1682704620"],
                 ['RSS Feed', RSSIcon, 'https://feeds.transistor.fm/cashed-dev'],
               ].map(([label, Icon, url]) => (
                 <li key={label} className="flex">
